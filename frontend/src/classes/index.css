@@ -1,0 +1,291 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url("react-toastify/dist/ReactToastify.css");
+@import url("react-image-gallery/styles/css/image-gallery.css");
+@import url('react-toastify/dist/ReactToastify.css');
+
+@layer utilities {
+
+    /* TYPOGRAPHY */
+    .body-bold {
+        @apply text-[18px] font-bold leading-[140%];
+    }
+
+    .base-medium {
+        @apply text-[16px] font-medium leading-[140%];
+    }
+
+    .base-semibold {
+        @apply text-[16px] font-semibold leading-[140%] tracking-tighter;
+    }
+
+    .small-regular {
+        @apply text-[14px] font-normal leading-[140%];
+    }
+
+    .small-medium {
+        @apply text-[14px] font-medium leading-[140%];
+    }
+
+    .tiny-medium {
+        @apply text-[10px] font-medium leading-[140%];
+    }
+
+    .h1-semibold {
+        @apply text-[36px] font-semibold leading-[140%] tracking-tighter;
+    }
+
+    .h2-bold {
+        @apply text-[30px] font-bold leading-[140%] tracking-tighter;
+    }
+
+    .h3-bold {
+        @apply text-[24px] font-bold leading-[140%] tracking-tighter;
+    }
+
+    .subtle-semibold {
+        @apply text-[12px] font-semibold leading-[140%];
+    }
+
+    /* UTILITIES */
+    .flex-between {
+        @apply flex justify-between items-center;
+    }
+
+    .invert-white {
+        @apply invert brightness-0 transition;
+    }
+
+    .flex-center {
+        @apply flex justify-center items-center;
+    }
+
+    .flex-start {
+        @apply flex justify-start items-center;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 10px;
+        height: 3px;
+        border-radius: 2px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #09090a;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #5c5c7b;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #7878a3;
+    }
+
+    .common-container {
+        @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md: px-8 lg:p-16 custom-scrollbar;
+    }
+}
+
+@layer components {
+
+    /* Header */
+    .header-container {
+        @apply sticky top-0 bg-light-2 z-50 w-screen;
+        /* @apply flex justify-between items-center px-[3rem] sticky top-0 bg-pink-1; */
+    }
+
+    .header-container_inner {
+        @apply px-[3rem] flex justify-between items-center;
+    }
+
+    .header-navbar {
+        @apply body-bold flex gap-2;
+    }
+
+    .header-navbar>* {
+        @apply text-dark-4 px-5 py-5 cursor-pointer;
+    }
+
+    .header-navbar .active-nav {
+        @apply border-b-2 border-green-600 text-green-600;
+    }
+
+    .header-logo {
+        @apply flex flex-col items-center gap-2 text-4xl text-green-600 cursor-pointer;
+    }
+
+    .header-logo span {
+        @apply text-xl text-green-600 font-bold;
+    }
+
+    .header-cart-btn {
+        @apply relative flex justify-center items-center gap-2 text-green-600 cursor-pointer px-5 py-3;
+    }
+
+    .header-cart-btn .header-cart_icon {
+        @apply text-3xl;
+    }
+
+    .header-open_cart-btn {
+        @apply bg-light-1 rounded-xl shadow-2xl transition-shadow;
+    }
+
+    .bg-clickable {
+        @apply absolute top-full w-full bg-dark-7 opacity-80 h-screen;
+    }
+
+    /* Loader */
+
+    .loading-container {
+        @apply absolute top-0 flex flex-col justify-center items-center z-50 h-full w-full;
+    }
+
+    .intro-container {
+        @apply bg-dark-2;
+    }
+
+    .loader-container {
+        @apply flex flex-col justify-center items-center;
+    }
+
+    .icon {
+        @apply text-green-500 animate-pulse;
+    }
+
+    .intro-icon {
+        @apply text-[9rem];
+    }
+
+    .loader-icon {
+        @apply text-[2rem];
+    }
+
+    .logo {
+        @apply bg-gradient-to-r from-blue-700 via-green-400 to-dark-7 text-transparent bg-clip-text bg-200% tracking-tight animate-gradient;
+    }
+
+    .intro-logo {
+        @apply text-[10rem];
+    }
+
+    .loader-logo {
+        @apply text-[1rem];
+    }
+
+    /* Products */
+
+    .products-contaienr {
+        @apply grid grid-cols-3 gap-10 justify-items-start pl-[3rem] pr-1 mb-5 w-auto;
+    }
+
+    /* Product Card */
+    .product-container {
+        @apply flex flex-col items-start p-4 overflow-hidden transition-all shadow-lg ease-linear translate-x-2 duration-500;
+    }
+
+    .product-header {
+        @apply relative mb-2;
+    }
+
+    .outStock-message {
+        @apply absolute inset-0 flex items-center justify-center px-2 py-1 text-2xl text-green-600 uppercase bg-white bg-opacity-60;
+    }
+
+    .quick-shop, .quick-shop_product-added {
+        @apply absolute bottom-0 right-[-1rem] p-3 rounded-full text-2xl text-light-1 transition-opacity duration-300 transform translate-y-1 opacity-0;
+    }
+
+    .quick-shop {
+        @apply bg-green-600;
+
+    }
+
+    .quick-shop_product-added {
+        @apply bg-light-4;
+
+    }
+
+    .product-container:hover .quick-shop,
+    .product-container:hover .quick-shop_product-added {
+        opacity: 100;
+    }
+
+    .product-body {
+        @apply flex flex-col gap-1 base-semibold text-green-600;
+    }
+
+
+    .product-body p:nth-of-type(1) {
+        @apply capitalize;
+    }
+
+    .product-body p:nth-of-type(2) {
+        @apply opacity-75;
+    }
+
+    .image-carousel {
+        @apply w-[700px];
+    }
+
+    .image-carousel .image-gallery-image {
+        @apply h-[500px];
+    }
+
+    .icon-bold svg {
+        stroke-width: 5;
+
+    }
+}
+
+body:has(.bg-clickable) {
+    overflow: hidden;
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes fadeOutRight {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.fadeInDown {
+    animation: fadeInDown 0.5s ease-out forwards;
+}
+
+.fadeOutUp {
+    animation: fadeOutUp 0.5s ease-in forwards;
+}
+
+
+.fadeOutRight {
+    animation: fadeOutRight 0.5s ease-in forwards;
+}
