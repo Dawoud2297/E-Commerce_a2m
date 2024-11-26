@@ -10,7 +10,7 @@ class Products extends Component {
 
     return (
       <main>
-        <div className="grid grid-cols-3 gap-10 justify-items-start pl-[3rem] pr-1 mb-5 w-auto">
+        <div className="grid grid-cols-3 gap-10 justify-items-start px-[3rem] mb-5 w-auto">
           {data?.products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

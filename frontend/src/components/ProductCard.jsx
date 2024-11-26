@@ -25,8 +25,8 @@ class ProductCard extends Component {
     );
 
     return (
-      <div className="group flex flex-col items-start p-4 overflow-hidden transition-all shadow-lg ease-linear translate-x-2 duration-500 hover:shadow-2xl">
-        <div className="relative mb-2">
+      <div className="group flex flex-col items-center justify-center w-full p-4 transition-all ease-linear translate-x-2 duration-500 hover:shadow-2xl">
+        <div className="relative mb-2 w-full">
           <Link
             to={`/${this.product.category}/${this.product.id}`}
             data-testid={`product-${this.product.name
@@ -37,19 +37,19 @@ class ProductCard extends Component {
               src={this.product.gallery[0]}
               alt={this.product.name}
               loading="lazy"
-              className="min-w-full min-h-64 max-h-80"
+              className="object-cover max-h-80 w-full"
             />
           </Link>
           {!this.product.inStock ? (
             <Link
               to={`/${this.product.category}/${this.product.id}`}
-              className="absolute inset-0 flex items-center justify-center px-2 py-1 text-2xl text-green-600 uppercase bg-white bg-opacity-60"
+              className="absolute inset-0 flex items-center justify-center px-2 py-1 text-2xl font-bold text-green-600 text-opacity-75 uppercase bg-white bg-opacity-65"
             >
               Out of Stock
             </Link>
           ) : (
             <button
-              className={`absolute group-hover:opacity-100 bottom-0 right-[-1rem] p-3 rounded-full text-2xl text-light-1 transition-opacity duration-300 transform translate-y-1 opacity-0 ${
+              className={`absolute group-hover:opacity-100 -bottom-5 -right-2 p-3 rounded-full text-3xl text-light-1 transition-opacity duration-300 transform translate-y-1 opacity-0 ${
                 productAddedToCart ? "bg-light-4" : "bg-green-600"
               }`}
               onClick={this.handleQuickShop}
@@ -63,9 +63,10 @@ class ProductCard extends Component {
             </button>
           )}
         </div>
-        <div className="flex flex-col gap-1 base-semibold text-green-600">
-          <p className="capitalize">{this.product.name}</p>
-          <p className="opacity-75">
+
+        <div className="flex flex-col gap-1 font-bold text-green-600 w-full">
+          <p className="capitalize text-lg">{this.product.name}</p>
+          <p>
             {this.product.prices[0].currency.symbol}
             {this.product.prices[0].amount}
           </p>
