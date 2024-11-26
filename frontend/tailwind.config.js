@@ -42,7 +42,7 @@ export default {
       },
       backgroundImage: {
         "gradient-custom":
-          "linear-gradient(to right, #2563eb, #3b82f6, #1f2937, #111827)", // Example gradient
+          "linear-gradient(to right, #2563eb, #3b82f6, #1f2937, #111827)",
       },
       keyframes: {
         loadingLogo: {
@@ -50,12 +50,27 @@ export default {
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
         },
+        fadeInDown: {
+          '0%': { opacity: '0', transform: 'translateY(-50px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeOutUp: {
+          '0%': { opacity: '1', transform: 'translateY(0)' },
+          '100%': { opacity: '0', transform: 'translateY(-20px)' },
+        },
+        fadeOutRight: {
+          '0%': { opacity: '1', transform: 'translateX(0)' },
+          '100%': { opacity: '0', transform: 'translateX(100%)' },
+        },
       },
       backgroundSize: {
         "200%": "200%",
       },
       animation: {
         gradient: "loadingLogo 3s ease infinite",
+        fadeInDown: 'fadeInDown 0.5s ease-out forwards',
+        fadeOutUp: 'fadeOutUp 0.5s ease-in forwards',
+        fadeOutRight: 'fadeOutRight 0.5s ease-in forwards',
       },
       letterSpacing: {
         tightest: "-.105em",

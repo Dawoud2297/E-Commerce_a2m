@@ -1,115 +1,157 @@
-import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { categories } from "../../constants";
-import { FaBasketShopping, FaCartShopping } from "react-icons/fa6";
-import { useEffect } from "react";
-import { useCartContext } from "../../context/CartContext";
+import { Component } from "react";
+import withCart from "../../HOCs/withCart";
 import PropTypes from "prop-types";
+import withRoute from "../../HOCs/withRoute";
+import { categories } from "../../constants";
+import { NavLink } from "react-router-dom";
+import { FaBasketShopping, FaCartShopping } from "react-icons/fa6";
 import Cart from "../Cart";
 
-const Header = ({ fetchProducts }) => {
-  const { cartItems, openCart, setOpenCart, showCart, setShowCart } =
-    useCartContext();
-  const { category } = useParams();
-  const navigate = useNavigate();
+class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.delayClosing = null;
+  }
 
-  const handleCategories = (category) => {
-    fetchProducts({ variables: { category: category } });
+  handleCategories = (category) => {
+    this.props.fetchProducts({ variables: { category: category } });
   };
 
-  const handleModel = (e) => {
+  handleModel = (e) => {
     e.stopPropagation();
+    const { openCart, setOpenCart } = this.props.cart;
     setOpenCart(!openCart);
   };
 
-  const logoNav = () => {
-    if (category !== "all") navigate("/all");
+  logoNav = () => {
+    const { category } = this.props.params;
+    if (category !== "all") this.props.navigate("/all");
   };
 
-  const handleCloseModel = () => {
+  handleCloseModel = () => {
+    const { openCart, setOpenCart } = this.props.cart;
     if (openCart) {
       setOpenCart(false);
     }
   };
 
-  useEffect(() => {
+  componentDidUpdate() {
+    const { openCart, setShowCart } = this.props.cart;
+
+    if (this.delayClosing) {
+      clearTimeout(this.delayClosing);
+    }
+
     if (openCart) {
       setShowCart(true);
     } else {
-      const delayClosing = setTimeout(() => setShowCart(false), 500);
-      return () => clearTimeout(delayClosing);
+      this.delayClosing = setTimeout(() => setShowCart(false), 500);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openCart]);
+  }
 
-  return (
-    <div className="header-container">
-      <div className="header-container_inner" onClick={handleCloseModel}>
-        <ul className="header-navbar">
-          {categories.map((cat) => {
-            const active = category === cat.category;
-            return (
-              <NavLink
-                to={`/${cat.category}`}
-                key={cat.category}
-                className={`${active ? "active-nav" : "text-green-500"}`}
-                onClick={() => handleCategories(cat.category)}
-                data-testid={active ? "active-category-link" : "category-link"}
-              >
-                {cat.name}
-              </NavLink>
-            );
-          })}
-        </ul>
-        <div onClick={logoNav} className="header-logo">
-          <FaBasketShopping />
-          <span>SCANDIWEB</span>
-        </div>
-        <div>
-          <button
-            onClick={handleModel}
-            className={`header-cart-btn ${
-              openCart ? "header-open_cart-btn" : ""
-            }`}
-            data-testid="cart-btn"
+  componentWillUnmount() {
+    if (this.delayClosing) {
+      clearTimeout(this.delayClosing);
+    }
+  }
+
+  render() {
+    const { category } = this.props.params;
+    const { cartItems, openCart, setOpenCart, showCart } = this.props.cart;
+
+    return (
+      <div className="sticky top-0 bg-light-2 z-50 w-screen">
+        <div
+          className="px-[3rem] flex justify-between items-center"
+          onClick={this.handleCloseModel}
+        >
+          <ul className="body-bold flex gap-2">
+            {categories.map((cat) => {
+              const active = category === cat.category;
+              return (
+                <NavLink
+                  to={`/${cat.category}`}
+                  key={cat.category}
+                  className={`text-dark-4 px-5 py-5 cursor-pointer ${
+                    active
+                      ? "border-b-2 border-green-600 text-green-600"
+                      : "text-green-500"
+                  }`}
+                  onClick={() => this.handleCategories(cat.category)}
+                  data-testid={
+                    active ? "active-category-link" : "category-link"
+                  }
+                >
+                  {cat.name}
+                </NavLink>
+              );
+            })}
+          </ul>
+          <div
+            onClick={this.logoNav}
+            className="flex flex-col items-center gap-2 text-4xl text-green-600 cursor-pointer"
           >
-            {cartItems.length > 0 ? (
-              <span className="absolute left-1 top-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-600"></span>
+            <FaBasketShopping />
+            <span className="text-xl text-green-600 font-bold">SCANDIWEB</span>
+          </div>
+          <div>
+            <button
+              onClick={this.handleModel}
+              className={`relative flex justify-center items-center gap-2 text-green-600 cursor-pointer px-5 py-3 ${
+                openCart
+                  ? "bg-light-1 rounded-xl shadow-2xl transition-shadow"
+                  : ""
+              }`}
+              data-testid="cart-btn"
+            >
+              {cartItems.length > 0 ? (
+                <span className="absolute left-1 top-1 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-600"></span>
+                </span>
+              ) : (
+                ""
+              )}
+              <span className="text-3xl">
+                <FaCartShopping />
               </span>
-            ) : (
-              ""
-            )}
-            <span className="header-cart_icon">
-              <FaCartShopping />
-            </span>
-            <div className="hidden md:flex flex-col items-center font-bold text-sm">
-              <span>
-                {cartItems.length > 0
-                  ? cartItems.reduce((total, item) => total + item.quantity, 0)
-                  : 0}
-              </span>
-              <span>{cartItems.length > 1 ? "Items" : "Item"}</span>
-            </div>
-          </button>
+              <div className="hidden md:flex flex-col items-center font-bold text-sm">
+                <span>
+                  {cartItems.length > 0
+                    ? cartItems.reduce(
+                        (total, item) => total + item.quantity,
+                        0
+                      )
+                    : 0}
+                </span>
+                <span>{cartItems.length > 1 ? "Items" : "Item"}</span>
+              </div>
+            </button>
+          </div>
         </div>
+        {showCart && (
+          <div
+            className={`relative ${
+              openCart ? " animate-fadeInDown" : "animate-fadeOutRight"
+            }`}
+          >
+            <Cart cartItems={cartItems} setOpenCart={setOpenCart} />
+            <div
+              onClick={this.handleCloseModel}
+              className="absolute top-full w-full bg-dark-7 opacity-80 h-screen bg-clickable"
+            ></div>
+          </div>
+        )}
       </div>
-      {showCart && (
-        <div className={`relative ${openCart ? "fadeInDown" : "fadeOutRight"}`}>
-          <Cart cartItems={cartItems} setOpenCart={setOpenCart} />
-          <div onClick={handleCloseModel} className="bg-clickable"></div>
-        </div>
-      )}
-    </div>
-  );
-};
+    );
+  }
+}
 
 Header.propTypes = {
   fetchProducts: PropTypes.func,
-  openCart: PropTypes.bool,
-  setOpenCart: PropTypes.func,
-  showCart: PropTypes.bool,
-  setShowCart: PropTypes.func,
+  cart: PropTypes.object,
+  params: PropTypes.object,
+  navigate: PropTypes.func,
 };
 
-export default Header;
+export default withRoute(withCart(Header));

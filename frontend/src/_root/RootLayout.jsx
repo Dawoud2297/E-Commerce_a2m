@@ -1,56 +1,53 @@
-import { useEffect, useState } from "react";
-import Header from "../components/shared/Header";
-import { Outlet, useParams } from "react-router-dom";
-import { useLazyQuery } from "@apollo/client";
+import { Component } from "react";
+import withGraphql from "../HOCs/withGraphql";
 import { GET_PRODUCTS } from "../graphql/queries";
+import Header from "../components/shared/Header";
 import Loading from "../components/shared/Loading";
+import { Outlet } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const RootLayout = () => {
-  const [products, setProducts] = useState([]);
-  const [showSplashScreen, setShowSplashScreen] = useState(true);
-  
-
-  const [fetchProducts, { loading }] = useLazyQuery(GET_PRODUCTS, {
-    onError: (error) => {
-      console.error("Error fetching data:", error);
-    },
-    onCompleted: (data) => setProducts(data),
-  });
-  const { category } = useParams();
-
-  useEffect(() => {
-    fetchProducts({ variables: { category } });
-  }, [category, fetchProducts]);
-
-  useEffect(() => {
-    if (showSplashScreen) {
-      const splashScreenTimer = setTimeout(
-        () => setShowSplashScreen(false),
+class RootLayout extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showSplashScreen: true,
+    };
+    this.splashScreenTimer = null;
+  }
+  componentDidMount() {
+      this.splashScreenTimer = setTimeout(
+        () => this.setState({ showSplashScreen: false }),
         3000
       );
-      return () => clearTimeout(splashScreenTimer);
-    }
-  }, [showSplashScreen]);
-
-  if (showSplashScreen) {
-    return <Loading intro={true} />;
   }
+  componentWillUnmount() {
+    if (this.splashScreenTimer) {
+      clearTimeout(this.splashScreenTimer);
+    }
+  }
+  render() {
+    if (this.state.showSplashScreen) {
+      return <Loading intro={true} logo="SCANDIWEB"/>;
+    }
 
-  return (
-    <div>
-      <Header
-        fetchProducts={fetchProducts}
-        loading={loading}
-      />
-      {loading ? (
-        <Loading />
-      ) : (
-        <main className="h-full mt-14">
-          <Outlet context={{ products: products?.products }} />
-        </main>
-      )}
-    </div>
-  );
+    return (
+      <div>
+        <Header fetchProducts={this.props.fetchData} />
+        {this.props.loading ? (
+          <Loading />
+        ) : (
+          <main className="h-full mt-14">
+            <Outlet />
+          </main>
+        )}
+      </div>
+    );
+  }
+}
+
+RootLayout.propTypes = {
+  fetchData: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
-export default RootLayout;
+export default withGraphql(RootLayout,"query", GET_PRODUCTS);

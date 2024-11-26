@@ -1,4 +1,7 @@
-@import url("./classes");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url("react-toastify/dist/ReactToastify.css");
+@import url("react-image-gallery/styles/css/image-gallery.css");
+@import url("react-toastify/dist/ReactToastify.css");
 
 @tailwind base;
 @tailwind components;
@@ -13,8 +16,29 @@
     @apply min-h-screen font-inter overflow-x-hidden;
   }
 
+  body:has(.bg-clickable) {
+    overflow: hidden;
+  }
+
   button:disabled {
     @apply cursor-not-allowed opacity-50;
   }
+}
+@layer utilities {
+  .body-bold {
+    @apply text-[18px] font-bold leading-[140%];
+  }
 
+  .base-semibold {
+    @apply text-[16px] font-semibold leading-[140%] tracking-tighter;
+  }
+}
+@layer components {
+  .image-carousel {
+    @apply min-w-[700px];
+  }
+
+  .image-carousel .image-gallery-image {
+    @apply h-[500px];
+  }
 }
